@@ -78,16 +78,17 @@ deleteUserForm.addEventListener('submit', proceedFormData)
 function proceedFormData(e) {
     let action = this.getAttribute('id');
     e.preventDefault();
-    const formData = new FormData(this);
-    let object = {};
-    formData.forEach((value, key) => {
-        object[key] = value;
-    });
+    // const formData = new FormData(this);
+    // let object = {};
+    // formData.forEach((value, key) => {
+    //     object[key] = value;
+    // });
+    //
+    //
+    // let json = `[${JSON.stringify(object)}]`;
 
-
-    let json = `[${JSON.stringify(object)}]`;
-    console.log(json)
-
+    let json = getJson(this);
+     console.log(json)
 
     switch (action) {
         case  'addUserForm':
@@ -162,4 +163,34 @@ function populateEditModal(id, action) {
                 })
             })
         });
+}
+
+function getJson(form) {
+    let js = {};
+    let field;
+    for (let i = 0; i < form.elements.length; i++) {
+        field = form.elements[i];
+        if (field.name && field.type !== 'submit') {
+            js[field.name] = field.value;
+            if (field.type === 'select-multiple') {
+                let js_sub = [];
+                for (let j = form.elements[i].options.length - 1; j >= 0; j--) {
+                    if (field.options[j].selected) {
+                        if (js[field.name] === undefined) {
+                            js[field.name] = [];
+                        }
+                        if (field.options[j].value === "ROLE_ADMIN") {
+                            js_sub.push({"id": 1, "name": field.options[j].value});
+                        } else if (field.options[j].value === "ROLE_USER") {
+                            js_sub.push({"id": 2, "name": field.options[j].value});
+                        }
+                    }
+                }
+                js[field.name] = js_sub;
+            } else {
+                js[field.name] = field.value
+            }
+        }
+    }
+    return js;
 }
