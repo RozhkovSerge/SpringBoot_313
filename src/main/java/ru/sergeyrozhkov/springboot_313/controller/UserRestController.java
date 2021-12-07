@@ -1,10 +1,7 @@
 package ru.sergeyrozhkov.springboot_313.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.sergeyrozhkov.springboot_313.model.User;
 import ru.sergeyrozhkov.springboot_313.service.RoleService;
 import ru.sergeyrozhkov.springboot_313.service.UserService;
@@ -43,7 +40,15 @@ public class UserRestController {
         return userService.findUserById(id);
     }
 
+    @PostMapping("/users")
+    public void addUser(@RequestBody User user) {
+        userService.save(user);
+    }
 
+    @PutMapping("/users")
+    public void editUser(@RequestBody User user) {
+        userService.save(user);
+    }
 
     public User findUserByEmail(String email) {
 

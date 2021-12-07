@@ -94,7 +94,10 @@ function proceedFormData(e) {
         case  'addUserForm':
             fetch('http://localhost:8080/api/users', {
                 method: 'post',
-                body: json
+                body: JSON.stringify(json),
+                headers:{
+                    'Content-Type':'application/json'
+                }
             }).then(function (response) {
                 return response.text();
             }).then(function (text) {
@@ -108,7 +111,10 @@ function proceedFormData(e) {
         case 'editUserForm':
             fetch('http://localhost:8080/api/users', {
                 method: 'put',
-                body: json
+                body: JSON.stringify(json),
+                headers:{
+                'Content-Type': 'application/json'
+                }
             }).then(function (response) {
                 return response.text();
             }).then(function (text) {
@@ -124,7 +130,10 @@ function proceedFormData(e) {
             let id = formData.get("id");
             fetch('http://localhost:8080/api/users/'+id, {
                 method: 'delete',
-                body: json
+                body: JSON.stringify(json),
+                headers:{
+                    'Content-Type':'application/json'
+                }
             }).then(function (response) {
                 return response.text();
             }).then(function (text) {

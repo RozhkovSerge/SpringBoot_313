@@ -26,7 +26,7 @@ public class PopulateDB {
     protected void populateDB() {
         Role roleAdmin = new Role("ROLE_ADMIN");
         Role roleUser = new Role("ROLE_USER");
-        roleRepository.saveAll(List.of(roleUser, roleAdmin));
+        roleRepository.saveAll(List.of(roleAdmin, roleUser));
 
         User admin = new User();
         admin.setFirstname("Bob");
