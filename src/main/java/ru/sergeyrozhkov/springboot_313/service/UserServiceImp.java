@@ -38,8 +38,14 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void save(User user) {
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
+        if (user.getId() != null && user.getPassword().equals(loadUserByUsername(user.getEmail()).getPassword())) {
+            userRepository.save(user);
+            return;
+        } else {
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+        }
         userRepository.save(user);
     }
 

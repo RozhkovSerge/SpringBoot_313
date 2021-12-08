@@ -1,5 +1,12 @@
 const editModal = new bootstrap.Modal(document.getElementById('editModal'));
 const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+const addNewUserForm = document.getElementById('addUserForm');
+const editUserForm = document.getElementById('editUserForm');
+const deleteUserForm = document.getElementById('deleteUserForm');
+
+addNewUserForm.addEventListener('submit', proceedFormData);
+editUserForm.addEventListener('submit', proceedFormData)
+deleteUserForm.addEventListener('submit', proceedFormData)
 
 function showAllUsers() {
     fetch('http://localhost:8080/api/users')
@@ -42,38 +49,31 @@ function showAllUsers() {
         });
 }
 
-showAllUsers();
+function getPrincipal() {
+    fetch('http://localhost:8080/api/getPrincipal')
+        .then((response) => {
+            return response.json();
+        })
+        .then((user) => {
+            let row = "";
+            let roleList = "";
+            row += "<tr>";
+            row += "<td>" + user.id + "</td>";
+            row += "<td>" + user.firstname + "</td>";
+            row += "<td>" + user.lastname + "</td>";
+            row += "<td>" + user.age + "</td>";
+            row += "<td>" + user.email + "</td>";
 
-fetch('http://localhost:8080/api/getPrincipal')
-    .then((response) => {
-        return response.json();
-    })
-    .then((user) => {
-        let row = "";
-        let roleList = "";
-        row += "<tr>";
-        row += "<td>" + user.id + "</td>";
-        row += "<td>" + user.firstname + "</td>";
-        row += "<td>" + user.lastname + "</td>";
-        row += "<td>" + user.age + "</td>";
-        row += "<td>" + user.email + "</td>";
+            user.roles.forEach((role) => {
+                roleList += `${role.name.substring(5)}, `;
+            });
+            roleList = roleList.slice(0, -2);
 
-        user.roles.forEach((role) => {
-            roleList += `${role.name.substring(5)}, `;
+            row += "<td>" + roleList + "</td></tr>";
+            document.querySelector(".user-info").innerHTML = row;
+            document.querySelector('.principal-info').innerHTML = `Welcome, <b>${user.email}</b> with role ${roleList}`;
         });
-        roleList = roleList.slice(0, -2);
-
-        row += "<td>" + roleList + "</td></tr>";
-        document.querySelector(".user-info").innerHTML = row;
-        document.querySelector('.principal-info').innerHTML = `Welcome, <b>${user.email}</b> with role ${roleList}`;
-    });
-
-const addNewUserForm = document.getElementById('addUserForm');
-addNewUserForm.addEventListener('submit', proceedFormData);
-const editUserForm = document.getElementById('editUserForm');
-editUserForm.addEventListener('submit', proceedFormData)
-const deleteUserForm = document.getElementById('deleteUserForm');
-deleteUserForm.addEventListener('submit', proceedFormData)
+}
 
 function proceedFormData(e) {
     let action = this.getAttribute('id');
@@ -156,6 +156,7 @@ function populateEditModal(id, action) {
             editModal.querySelector('[name="lastname"]').setAttribute("value", user.lastname);
             editModal.querySelector('[name="age"]').setAttribute("value", user.age);
             editModal.querySelector('[name="email"]').setAttribute("value", user.email);
+            editModal.querySelector('[name="password"]').setAttribute("value", user.password);
             roleOptions.forEach((e) => {
                 user.roles.forEach((role) => {
                     if (role.name.substring(5).trim() === e.textContent.trim()) {
@@ -195,3 +196,6 @@ function getJson(form) {
     }
     return js;
 }
+
+showAllUsers();
+getPrincipal();
