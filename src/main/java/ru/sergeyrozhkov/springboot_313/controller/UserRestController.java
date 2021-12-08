@@ -50,6 +50,11 @@ public class UserRestController {
         userService.save(user);
     }
 
+    @DeleteMapping("users/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.delete(userService.findUserById(id));
+    }
+
     public User findUserByEmail(String email) {
 
         return userService.findUserByEmail(email);

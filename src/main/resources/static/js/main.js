@@ -78,15 +78,7 @@ deleteUserForm.addEventListener('submit', proceedFormData)
 function proceedFormData(e) {
     let action = this.getAttribute('id');
     e.preventDefault();
-    // const formData = new FormData(this);
-    // let object = {};
-    // formData.forEach((value, key) => {
-    //     object[key] = value;
-    // });
-    //
-    //
-    // let json = `[${JSON.stringify(object)}]`;
-
+    const formData = new FormData(this);
     let json = getJson(this);
      console.log(json)
 
