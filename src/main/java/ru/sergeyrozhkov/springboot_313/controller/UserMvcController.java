@@ -24,7 +24,7 @@ public class UserMvcController {
 
     @GetMapping("/user")
     public String showUserPage(Principal principal, Model model) {
-        model.addAttribute(userService.findUserByEmail(principal.getName()));
+        model.addAttribute("user", userService.findUserByEmail(principal.getName()));
         return "user";
     }
 }
