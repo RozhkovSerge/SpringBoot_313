@@ -17,12 +17,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final CustomOauth2UserService customOauth2UserService;
     private final SuccessLoginHandler successLoginHandler;
+    private final Oauth2UserSuccessHandler oauth2UserSuccessHandler;
 
     @Autowired
-    public SecurityConfig(UserService userService, CustomOauth2UserService customOauth2UserService, SuccessLoginHandler successLoginHandler) {
+    public SecurityConfig(UserService userService,
+                          CustomOauth2UserService customOauth2UserService,
+                          SuccessLoginHandler successLoginHandler,
+                          Oauth2UserSuccessHandler oauth2UserSuccessHandler) {
         this.userService = userService;
         this.customOauth2UserService = customOauth2UserService;
         this.successLoginHandler = successLoginHandler;
+        this.oauth2UserSuccessHandler = oauth2UserSuccessHandler;
     }
 
     @Override
@@ -40,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(successLoginHandler)
 
                 .and()
-                .oauth2Login().successHandler(successLoginHandler)
+                .oauth2Login().successHandler(oauth2UserSuccessHandler)
                 .loginPage("/login").userInfoEndpoint().userService(customOauth2UserService);
 
         http.csrf().disable();
