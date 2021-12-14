@@ -8,32 +8,40 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.sergeyrozhkov.springboot_313.service.CustomOauth2UserService;
 import ru.sergeyrozhkov.springboot_313.service.UserService;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
+    private final CustomOauth2UserService customOauth2UserService;
     private final SuccessLoginHandler successLoginHandler;
 
     @Autowired
-    public SecurityConfig(UserService userService, SuccessLoginHandler successLoginHandler) {
+    public SecurityConfig(UserService userService, CustomOauth2UserService customOauth2UserService, SuccessLoginHandler successLoginHandler) {
         this.userService = userService;
+        this.customOauth2UserService = customOauth2UserService;
         this.successLoginHandler = successLoginHandler;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.authorizeRequests()
+                .antMatchers("/oauth2/**").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/**").authenticated()
+
+                .and()
                 .formLogin()
                 .loginPage("/login")
                 .permitAll()
                 .usernameParameter("email")
                 .successHandler(successLoginHandler)
+
                 .and()
-                .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/**").authenticated();
+                .oauth2Login().successHandler(successLoginHandler)
+                .loginPage("/login").userInfoEndpoint().userService(customOauth2UserService);
 
         http.csrf().disable();
 

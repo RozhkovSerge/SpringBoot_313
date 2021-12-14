@@ -10,7 +10,7 @@ import ru.sergeyrozhkov.springboot_313.repository.UserRepository;
 import javax.annotation.PostConstruct;
 import java.util.List;
 
-@Component
+//@Component
 public class PopulateDB {
 
     private final UserRepository userRepository;
