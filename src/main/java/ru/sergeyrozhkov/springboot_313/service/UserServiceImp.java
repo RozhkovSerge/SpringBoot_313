@@ -5,14 +5,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import ru.sergeyrozhkov.springboot_313.model.CustomOauth2User;
 import ru.sergeyrozhkov.springboot_313.model.User;
 import ru.sergeyrozhkov.springboot_313.repository.UserRepository;
 
 import java.util.List;
 
 @Service
-public class UserServiceImp implements UserService {
+public class UserServiceImp extends DefaultOAuth2UserService implements UserService {
 
     private final UserRepository userRepository;
 
@@ -62,5 +68,11 @@ public class UserServiceImp implements UserService {
         }
 
         return user;
+    }
+
+    @Override
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        OAuth2User user = super.loadUser(userRequest);
+        return new CustomOauth2User(user);
     }
 }

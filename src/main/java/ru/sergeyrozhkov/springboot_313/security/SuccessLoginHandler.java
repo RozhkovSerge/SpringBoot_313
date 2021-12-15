@@ -20,8 +20,6 @@ public class SuccessLoginHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException, ServletException {
 
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-//        CustomOauth2User oauth2User = (CustomOauth2User) authentication.getPrincipal();
-//        System.out.println(oauth2User.getEmail());
         if (roles.contains("ROLE_ADMIN")) {
             response.sendRedirect("/");
         } else {

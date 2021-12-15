@@ -1,6 +1,7 @@
 package ru.sergeyrozhkov.springboot_313.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import ru.sergeyrozhkov.springboot_313.model.User;
 import ru.sergeyrozhkov.springboot_313.service.RoleService;
@@ -25,7 +26,12 @@ public class UserRestController {
     @GetMapping("/getPrincipal")
     public User getPrincipal(Principal principal) {
 
-        return findUserByEmail(principal.getName());
+        if (principal instanceof OAuth2AuthenticationToken) {
+            String email = ((OAuth2AuthenticationToken) principal).getPrincipal().getAttributes().get("email").toString();
+            return userService.findUserByEmail(email);
+        } else {
+            return findUserByEmail(principal.getName());
+        }
     }
 
     @GetMapping("/users")
@@ -59,7 +65,6 @@ public class UserRestController {
 
         return userService.findUserByEmail(email);
     }
-
 
 
 }
