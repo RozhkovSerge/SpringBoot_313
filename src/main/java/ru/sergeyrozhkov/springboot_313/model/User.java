@@ -47,9 +47,6 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(s -> new SimpleGrantedAuthority(s.getName())).collect(Collectors.toList());
